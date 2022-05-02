@@ -1,0 +1,59 @@
+---
+title: "Uber Pickup Analysis"
+author: "Branden Hickerson"
+date: '2022-04-16'
+output: 
+  html_document: 
+    theme: cerulean
+---
+
+```{r setup, include= TRUE}
+install.packages("knitr")
+library("knitr")
+install.packages("tidyverse")
+library("tidyverse")
+install.packages("ggmap")
+library("ggmap")
+install.packages("rmarkdown")
+library("rmarkdown")
+install.packages("readxl")
+library("readxl")
+```
+
+## My Uber Data
+
+```{r, include=TRUE}
+clean_uber_data <- read_excel("clean_uber_data.xlsx")
+```
+
+```{r data rdata, echo=TRUE}
+clean_uber_data
+```
+
+```{r register key, include= TRUE}
+register_google(key="AIzaSyD4TY4Xp3kYaZ6D8EanGPwGBAZZuf5-osA")
+```
+
+```{r upload map, include=TRUE}
+Denver_Map<-get_map("Denver", zoom = 10)
+```
+
+```{r layer points, include=TRUE}
+All_Pickup_Points<-ggmap(Denver_Map)+geom_point(data= clean_uber_data, aes(x=clean_uber_data$"Begin Trip Longitude", y= clean_uber_data$"Begin Trip Latitude"))
+```
+
+## All Uber Pickups in Denver
+
+```{r plot points, echo= TRUE, warning=FALSE}
+plot(All_Pickup_Points)
+```
+
+```{r all pickups density plot, include= TRUE}
+All_Pickup_density<-ggmap(Denver_Map)+geom_density_2d_filled( bins= 40, data= clean_uber_data, aes(x=clean_uber_data$"Begin Trip Longitude", y= clean_uber_data$"Begin Trip Latitude", alpha=.9))
+```
+
+## All Uber Pickups Density
+
+```{r All pickups Density, echo= TRUE, warning= FALSE}
+plot(All_Pickup_density)
+```
